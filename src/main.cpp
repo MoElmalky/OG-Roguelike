@@ -1,19 +1,20 @@
 #include <raylib.h>
+#include "game.h"
 
 int main()
 {
-    const int screenWidth = 800;
-    const int screenHeight = 600;
 
-    InitWindow(screenWidth, screenHeight, "OG Roguelike");
-    SetTargetFPS(60);
+    Game game = Game();
+
+    InitWindow(game.SCREEN_WIDTH, game.SCREEN_HEIGHT, "OG Roguelike");
 
     while (!WindowShouldClose())
     {
         
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawCircle(400,300,50,WHITE);
+        game.DrawWorldMatrix();
+        DrawFPS(10, 10);
         EndDrawing();
     }
 
