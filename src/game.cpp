@@ -1,5 +1,5 @@
 #include "game.h"
-#include <raylib.h>
+#include <iostream>
 
 class Test : public GameObject{
 public:
@@ -10,15 +10,24 @@ public:
         DrawCircle(posX,posY,10,WHITE);
     }
 
-    void update() override {
-        if(IsKeyPressed(KEY_A))
-            posX -= 1;
-        if(IsKeyPressed(KEY_D))
-            posX += 1;
-        if(IsKeyPressed(KEY_W))
-            posY -= 1;
-        if(IsKeyPressed(KEY_S))
-            posY += 1;
+    void update(float dt) override {
+        if(IsKeyPressed(KEY_A)){
+            std::cout<<100*dt<<std::endl;
+            posX -= 1000*dt;
+        }
+        if(IsKeyPressed(KEY_D)){
+            std::cout<<100*dt<<std::endl;
+            posX += 1000*dt;
+        }
+        if(IsKeyPressed(KEY_W)){
+            std::cout<<100*dt<<std::endl;
+            posY -= 1000*dt;
+        }
+        if(IsKeyPressed(KEY_S)){
+            std::cout<<100*dt<<std::endl;
+            posY += 1000*dt;
+        }
+            
     }
 
     ~Test() override {}
@@ -26,13 +35,13 @@ public:
 
 Game::Game()
 {
-    Test player = Test(50,50);
-    gameObjects.push_back(&player);
+    Test *player = new Test(50,50);
+    gameObjects.push_back(player);
 }
 
 Game::~Game()
 {
-    for (auto* obj : gameObjects) {
+    for (auto obj : gameObjects) {
         delete obj;
     }
 }
@@ -46,16 +55,33 @@ void Game::RunGame()
 {
     while (!WindowShouldClose())
     {
-    for(auto *obj : gameObjects){
-        obj->update();
+    for(auto obj : gameObjects){
+        obj->update(deltaTime);
     }
     BeginDrawing();
     ClearBackground(BLACK);
-    for(const auto *obj : gameObjects){
+    for(const auto obj : gameObjects){
         obj->draw();
     }
     DrawFPS(10, 10);
     EndDrawing();
+
+    currentTime = GetTime();
+    updateDrawTime = currentTime - previousTime;
+        
+    if (targetFPS > 0)
+    {
+        waitTime = (1.0f/(float)targetFPS) - updateDrawTime;
+        if (waitTime > 0.0) 
+        {
+            WaitTime((float)waitTime);
+            currentTime = GetTime();
+            deltaTime = (float)(currentTime - previousTime);
+        }
+    }
+    else deltaTime = (float)updateDrawTime;
+
+    previousTime = currentTime;
     }
     CloseWindow();
 }

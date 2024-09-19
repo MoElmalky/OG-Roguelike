@@ -3,11 +3,13 @@
 
 int main()
 {
-    Game game = Game();
+    Game *game = new Game();
 
-    game.InitGameWindow();
+    game->InitGameWindow();
     
-    game.RunGame();
+    game->RunGame();
+
+    delete game;
 
     return 0;
 }
